@@ -1,25 +1,22 @@
-import * as Peer from '../peerjs/peerjs.js';
-
 import { Component, OnInit } from '@angular/core';
+
+import { Peer } from './../peerjs/peer.class';
 
 @Component({
   selector: 'app-sender',
   templateUrl: './sender.component.html',
   styleUrls: ['./sender.component.scss']
 })
-export class SenderComponent implements OnInit {
+export class SenderComponent extends Peer implements OnInit {
 
   private peer: any = null;
   connectionId: string;;
   remoteConnection: any;
 
   constructor() {
-    this.peer = new Peer();
-    this.peer.on('open', id => {
-      this.connectionId = id;
-    }).on('connection', function (conn) {
+    super();
+    this.connection.on('connection', function (conn) {
       conn.on('data', function (data) {
-        // Will print 'hi!'
         console.log(data);
       });
     });
@@ -35,13 +32,17 @@ export class SenderComponent implements OnInit {
   }
 
   createRemoteConnection(targetAddress) {
-    this.remoteConnection = this.peer.connect(targetAddress, {
+    this.remoteConnection = this.connection.connect(targetAddress, {
       reliable: true
     });
 
     this.remoteConnection.on('open', _ => {
       // here you have conn.id
       this.remoteConnection.send('hi!');
+      this.remoteConnection.send({
+        type: "handshake",
+        connectionId: this.connectionId
+      });
       console.log('sending');
       
     });

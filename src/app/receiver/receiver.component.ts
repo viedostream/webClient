@@ -1,25 +1,30 @@
-import * as Peer from '../peerjs/peerjs.js';
-
 import { Component, OnInit } from '@angular/core';
+
+import { Peer } from './../peerjs/peer.class';
 
 @Component({
   selector: 'app-receiver',
   templateUrl: './receiver.component.html',
   styleUrls: ['./receiver.component.scss']
 })
-export class ReceiverComponent implements OnInit {
+export class ReceiverComponent extends Peer implements OnInit {
 
-  private peer: any = null;
-  connectionId: string = '';
 
   constructor() {
-    this.peer = new Peer();
-    this.peer.on('open', id => {
-      this.connectionId = id;
-    }).on('connection', function (conn) {
-      conn.on('data', function (data) {
+    super();
+    this.connection.on('connection', conn => {
+      conn.on('data', data => {
         // Will print 'hi!'
-        console.log(data);
+        switch (data.type || "") {
+          case "":
+            console.log(data);
+            break;
+          case "handshake":
+            this.remoteConnection = this.connection.connect(data.connectionId);
+            this.remoteConnection.on('open', _ => {
+              this.remoteConnection.send('hi back :)');
+            });
+        }
       });
     });
   }
