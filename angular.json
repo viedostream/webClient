@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "videoCall"
+    }
+  },
+  "defaultProject": "videoCall",
+  "cli": {
+    "analytics": false
+  }
 }

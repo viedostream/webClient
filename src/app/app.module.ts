@@ -1,12 +1,15 @@
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { ReceiverComponent } from './receiver/receiver.component';
+import { SenderComponent } from './sender/sender.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SenderComponent,
+    ReceiverComponent
   ],
   imports: [
     BrowserModule,
