@@ -8,13 +8,14 @@ export class Peer {
 
     constructor() {
         this.connection = new PeerJS({
-            host: "49.12.13.207",
-            port: 9000,
+            host: "peer.koalament.io",
+            secure: true,
+            port: 443,
             path: '/peerjs',
+            // debug: 3
         });
         this.connection.on('open', id => {
             this.connectionId = id;
         });
     }
-
 }
