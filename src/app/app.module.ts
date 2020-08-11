@@ -9,6 +9,7 @@ import { PanelComponent } from './panel/panel.component';
 // import { ReceiverComponent } from './receiver/receiver.component';
 // import { SenderComponent } from './sender/sender.component';
 import { UserComponent } from './user/user.component';
+import { ZixoComponent } from './zixo/zixo.component';
 
 @NgModule({
   declarations: [
@@ -16,14 +17,15 @@ import { UserComponent } from './user/user.component';
     // SenderComponent,
     // ReceiverComponent,
     UserComponent,
-    PanelComponent
+    PanelComponent,
+    ZixoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

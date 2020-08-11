@@ -2,14 +2,13 @@ import { BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from "@angular/core"
 import { catchError } from 'rxjs/operators';
-import { environment } from './../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
-export class UserService {
-    private url: string = environment.API_ENDPOINT + 'user/';
-    public token: string;
+export class ZixoUserService {
+    private url: string = 'https://wallet.zixo.io/v1/';
+    private token: string;
 
     constructor(
         private HttpClient: HttpClient

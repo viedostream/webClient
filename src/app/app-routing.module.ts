@@ -5,6 +5,7 @@ import { PanelComponent } from './panel/panel.component';
 // import { ReceiverComponent } from './receiver/receiver.component';
 // import { SenderComponent } from './sender/sender.component';
 import { UserComponent } from './user/user.component';
+import { ZixoComponent } from './zixo/zixo.component';
 
 const routes: Routes = [
   // {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: "panel",
     component: PanelComponent
+  },
+  {
+    path: "zixo/login",
+    component: ZixoComponent
   }
 ];
 
