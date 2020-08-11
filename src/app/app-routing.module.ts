@@ -1,17 +1,27 @@
 import { RouterModule, Routes } from '@angular/router';
 
 import { NgModule } from '@angular/core';
-import { ReceiverComponent } from './receiver/receiver.component';
-import { SenderComponent } from './sender/sender.component';
+import { PanelComponent } from './panel/panel.component';
+// import { ReceiverComponent } from './receiver/receiver.component';
+// import { SenderComponent } from './sender/sender.component';
+import { UserComponent } from './user/user.component';
 
 const routes: Routes = [
+  // {
+  //   path: "",
+  //   component: 
+  // },
+  // {
+  //   path: "connect",
+  //   component: SenderComponent
+  // },
   {
-    path: "",
-    component: ReceiverComponent
+    path: "user",
+    component: UserComponent
   },
   {
-    path: "connect",
-    component: SenderComponent
+    path: "panel",
+    component: PanelComponent
   }
 ];
 

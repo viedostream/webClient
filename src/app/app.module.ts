@@ -1,19 +1,29 @@
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { ReceiverComponent } from './receiver/receiver.component';
-import { SenderComponent } from './sender/sender.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PanelComponent } from './panel/panel.component';
+// import { ReceiverComponent } from './receiver/receiver.component';
+// import { SenderComponent } from './sender/sender.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SenderComponent,
-    ReceiverComponent
+    // SenderComponent,
+    // ReceiverComponent,
+    UserComponent,
+    PanelComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule,
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
