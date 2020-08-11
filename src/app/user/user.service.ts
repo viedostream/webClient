@@ -13,7 +13,9 @@ export class UserService {
 
     constructor(
         private HttpClient: HttpClient
-    ) { }
+    ) {
+        this.token = localStorage.getItem("userToken");
+    }
 
     login(emailOrUsername: string, password: string) {
         return new Promise((resolve, reject) => {
@@ -28,7 +30,7 @@ export class UserService {
                 if (data.token == false) {
                     return reject()
                 }
-                this.token = data.token;
+                this.storeToken(data.token)
                 resolve();
             })
         });
@@ -41,10 +43,17 @@ export class UserService {
                 user: username,
                 password: password
             }).subscribe((data: any) => {
-                this.token = data.token;
+                this.storeToken(data.token)
                 resolve();
             });
         });
+    }
+
+    storeToken(token) {
+        if (token !== undefined) {
+            localStorage.setItem("userToken", token);
+            this.token = token;
+        }
     }
 
     authenticate() {

@@ -31,8 +31,6 @@ export class PanelService {
                 if (!response) {
                     return reject()
                 }
-                console.log(response);
-
                 return resolve(response);
             });
         });
@@ -46,7 +44,7 @@ export class PanelService {
                 .get(this.url + "around" + queryString, {
                     headers: new HttpHeaders({
                         'Content-Type': 'application/json',
-                        token: this.userS.token || '6810d23700b0f41c8ce315b4535a5875db1a485ee17394ddfbb1c21eab5e3907'
+                        token: this.userS.token
                     })
                 })
                 .pipe(
@@ -59,8 +57,6 @@ export class PanelService {
                     if (!response) {
                         return reject()
                     }
-                    console.log(response);
-
                     return resolve(response);
                 });
         });

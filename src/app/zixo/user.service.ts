@@ -12,7 +12,9 @@ export class ZixoUserService {
 
     constructor(
         private HttpClient: HttpClient
-    ) { }
+    ) {
+        this.token = localStorage.getItem("zixoToken");
+    }
 
     login(emailOrUsername: string, password: string) {
         return new Promise((resolve, reject) => {
@@ -27,7 +29,7 @@ export class ZixoUserService {
                 if (data.token == false) {
                     return reject()
                 }
-                this.token = data.token;
+                this.storeToken(data.token);
                 resolve();
             })
         });
@@ -40,7 +42,7 @@ export class ZixoUserService {
                 user: username,
                 password: password
             }).subscribe((data: any) => {
-                this.token = data.token;
+                this.storeToken(data.token);
                 resolve();
             });
         });
@@ -48,6 +50,13 @@ export class ZixoUserService {
 
     authenticate() {
         return this.token || false;
+    }
+
+    storeToken(token) {
+        if (token !== undefined) {
+            localStorage.setItem("zixoToken", token);
+            this.token = token;
+        }
     }
 
     private https(target: string, data: any) {

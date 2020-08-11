@@ -18,20 +18,7 @@ export class PanelComponent implements OnInit {
   userList: {
     username: string,
     geo: string
-  }[] = [
-      {
-        username: 'miladm',
-        geo: '1546545 X 5456415'
-      },
-      {
-        username: 'mohammadreza',
-        geo: '1546545 X 5456415'
-      },
-      {
-        username: 'meysam',
-        geo: '1546545 X 5456415'
-      }
-    ];
+  }[] = [];
 
 
   constructor(
@@ -39,9 +26,6 @@ export class PanelComponent implements OnInit {
     public userS: UserService,
     public PanelS: PanelService
   ) {
-    console.log(
-      zixoUserS.authenticate()
-    );
   }
 
   ngOnInit(): void {
@@ -55,29 +39,36 @@ export class PanelComponent implements OnInit {
 
   updateGeolocation() {
     let navigator = browser.navigator;
-    console.log(navigator);
-
     if (!navigator.geolocation) {
       console.log('Geolocation is not supported by your browser');
     } else {
-      console.log('Locating…');
       navigator.geolocation.getCurrentPosition(position => {
-        console.log(position);
         this.position = position;
-        console.log('updating geo');
-
         this.PanelS.updateData("0", this.position?.coords?.latitude, position?.coords?.longitude)
           .then(response => {
-            console.log(response);
+
           })
           .catch(_ => {
-            console.log('error');
+            console.error('error');
           })
 
-        this.PanelS.getAround(this.position?.coords?.latitude, position?.coords?.longitude).then(data => {
-          console.log(data);
-          
-        })
+        this.PanelS
+          .getAround(this.position?.coords?.latitude, position?.coords?.longitude)
+          .then((data: {
+            id: string,
+            peerId: string,
+            location: number[]
+          }[]) => {
+            this.userList = [];
+            if (data) {
+              data.forEach(element => {
+                this.userList.push({
+                  username: element.id,
+                  geo: element.location.join(" X ")
+                });
+              })
+            }
+          })
 
 
 
