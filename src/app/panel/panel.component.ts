@@ -1,7 +1,6 @@
-import * as browser from "../assets/navigator.js";
-
 import { Component, OnInit } from '@angular/core';
 
+import { AccessStateService } from './../accessState.service';
 import { PanelService } from './panel.service';
 import { UserService } from './../user/user.service';
 import { ZixoUserService } from './../zixo/user.service';
@@ -12,68 +11,49 @@ import { ZixoUserService } from './../zixo/user.service';
   styleUrls: ['./panel.component.scss']
 })
 export class PanelComponent implements OnInit {
-
-  position: any = false;
-
   userList: {
     username: string,
-    geo: string
+    geoLabel: string
   }[] = [];
 
 
   constructor(
     public zixoUserS: ZixoUserService,
     public userS: UserService,
-    public PanelS: PanelService
+    public PanelS: PanelService,
+    public accessStateS: AccessStateService
   ) {
   }
 
   ngOnInit(): void {
-    this.updateGeolocation();
+    this.updateList();
 
     let zixoToken = this.zixoUserS.authenticate();
     if (zixoToken) {
-      this.updateGeolocation();
+      this.updateList();
     }
   }
 
-  updateGeolocation() {
-    let navigator = browser.navigator;
-    if (!navigator.geolocation) {
-      console.log('Geolocation is not supported by your browser');
-    } else {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.position = position;
-        this.PanelS.updateData("0", this.position?.coords?.latitude, position?.coords?.longitude)
-          .then(response => {
-
-          })
-          .catch(_ => {
-            console.error('error');
-          })
-
-        this.PanelS
-          .getAround(this.position?.coords?.latitude, position?.coords?.longitude)
-          .then((data: {
-            id: string,
-            peerId: string,
-            location: number[]
-          }[]) => {
-            this.userList = [];
-            if (data) {
+  updateList() {
+    this.PanelS
+      .getAround(0, 0)
+      .then((data: {
+          id: string,
+          peerId: string,
+          location: number[],
+          userName: string
+      }[]) => {
+          this.userList = [];
+          if (data) {
               data.forEach(element => {
-                this.userList.push({
-                  username: element.id,
-                  geo: element.location.join(" X ")
-                });
+                  this.userList.push({
+                      username: element.userName,
+                      geoLabel: element.location.join(" X ")
+                  });
               })
-            }
-          })
+          }
+      })
 
-
-
-      }, error => { });
-    }
   }
 
 }

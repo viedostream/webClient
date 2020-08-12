@@ -1,12 +1,25 @@
-<section>
-    Latitude: {{position?.coords?.latitude}} °, Longitude: {{position?.coords?.longitude}} 
-</section>
-
 <section class="container">
+
+    <ngb-alert *ngIf="zixoUserS.authenticate() == false"
+        type="{{ (accessStateS.geoLocation | async) ? 'success' : 'warning' }}">
+        geo-location access is {{ (accessStateS.geoLocation | async) ? 'on' : 'off' }}
+        <button style="float: right;" class="btn btn-primary"
+            (click)="accessStateS.getGeoLocationAccess()">Access</button>
+        <section style="clear: both;"></section>
+    </ngb-alert>
+
+
+    <ngb-alert *ngIf="zixoUserS.authenticate() == false"
+        type="{{ (accessStateS.media | async) ? 'success' : 'warning' }}">
+        webcam and audio access is {{ (accessStateS.media | async) ? 'on' : 'off' }}
+        <button style="float: right;" class="btn btn-primary" (click)="accessStateS.getMediaAccess()">Access</button>
+        <section style="clear: both;"></section>
+    </ngb-alert>
 
     <ngb-alert *ngIf="zixoUserS.authenticate() == false" type="info">
         you must login to zixo account to make call!
-        <button [routerLink]="['/zixo/login']" class="btn btn-primary">Login</button>
+        <button style="float: right;" [routerLink]="['/zixo/login']" class="btn btn-primary">Login</button>
+        <section style="clear: both;"></section>
     </ngb-alert>
 
     <table class="table table-striped">
@@ -24,7 +37,7 @@
                 <td>
                     {{ user.username }}
                 </td>
-                <td>{{ user.geo }}</td>
+                <td>{{ user.geoLabel }}</td>
                 <td><button class="btn btn-primary">Call</button></td>
             </tr>
         </tbody>
