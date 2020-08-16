@@ -10,7 +10,7 @@ export const environment = {
     secure: true,
     port: 443,
     path: '/peerjs',
-    debug: 3
+    // debug: 3
   }
 };
 

@@ -1,6 +1,7 @@
 import * as BROWSER from "./assets/navigator.js";
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+
 import { Injectable } from '@angular/core';
 
 // import { PanelService } from './panel/panel.service';
@@ -11,7 +12,7 @@ import { Injectable } from '@angular/core';
 export class AccessStateService {
     media: BehaviorSubject<boolean> = new BehaviorSubject(false);
     geoLocation: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    mediaStream: any;
+    mediaStream: Subject<any> = new Subject();
     geoPosition: any;
 
     constructor(
@@ -26,7 +27,7 @@ export class AccessStateService {
         navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
             .then((stream) => {
                 this.media.next(true);
-                this.mediaStream = stream;
+                this.mediaStream.next(stream);
             })
             .catch(_ => { this.media.next(false) });
     }
@@ -53,7 +54,9 @@ export class AccessStateService {
         }
     }
 
-    getMedia() { }
+    getMedia() {
+
+    }
 
     getLocation() { }
 }

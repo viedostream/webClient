@@ -10,6 +10,7 @@ import { PanelComponent } from './panel/panel.component';
 // import { SenderComponent } from './sender/sender.component';
 import { UserComponent } from './user/user.component';
 import { ZixoComponent } from './zixo/zixo.component';
+import { CallComponent } from './call/call.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ZixoComponent } from './zixo/zixo.component';
     // ReceiverComponent,
     UserComponent,
     PanelComponent,
-    ZixoComponent
+    ZixoComponent,
+    CallComponent
   ],
   imports: [
     BrowserModule,
