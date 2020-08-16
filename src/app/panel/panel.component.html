@@ -1,14 +1,10 @@
-<app-call></app-call>
-
-
-
 <section class="container">
 
     <ngb-alert *ngIf="zixoUserS.authenticate() == false"
         type="{{ (accessStateS.geoLocation | async) ? 'success' : 'warning' }}">
         geo-location access is {{ (accessStateS.geoLocation | async) ? 'on' : 'off' }}
         <button *ngIf="!(accessStateS.geoLocation | async)" style="float: right;" class="btn btn-primary"
-            (click)="accessStateS.getGeoLocationAccess()">Access</button>
+            (click)="accessStateS.getGeo()">Access</button>
         <section style="clear: both;"></section>
     </ngb-alert>
 
@@ -17,7 +13,7 @@
         type="{{ (accessStateS.media | async) ? 'success' : 'warning' }}">
         webcam and audio access is {{ (accessStateS.media | async) ? 'on' : 'off' }}
         <button *ngIf="!(accessStateS.media | async)" style="float: right;" class="btn btn-primary"
-            (click)="accessStateS.getMediaAccess()">Access</button>
+            (click)="accessStateS.getMedia()">Access</button>
         <section style="clear: both;"></section>
     </ngb-alert>
 

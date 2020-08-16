@@ -13,7 +13,7 @@ import { environment } from './../../environments/environment';
 })
 export class PanelService {
     private url: string = environment.API_ENDPOINT + 'geo/';
-    private requestQuery: string = `?latitude=0&longitude=0`;
+    private requestQuery: string = `?lat=0&lng=0`;
     aroundList: Subject<{
         id: string,
         peerId: string,
@@ -30,11 +30,12 @@ export class PanelService {
     ) {
         this.AccessStateS.getGeo().then(position => {
             this.updateData(position.coords.latitude, position.coords.longitude).then(_=>{
-                this.updateAroundList();
             }).catch(_=>{
-                this.updateAroundList();
             });
-        })
+        });
+        setInterval(_=>{
+            this.updateAroundList();
+        }, 1000);
     }
 
     updateData(lat: number, long: number) {
@@ -42,8 +43,10 @@ export class PanelService {
             this.PeerS.connect().then(peerId => {
                 this.https("update", {
                     peerId: peerId,
-                    latitude: lat,
-                    longitude: long
+                    location: {
+                        lat: lat,
+                        lng: long
+                    }
                 }).subscribe(response => {
                     if (!response) {
                         return reject()
@@ -55,7 +58,7 @@ export class PanelService {
     }
 
     getAround(lat: number, long: number) {
-        this.requestQuery = `?latitude=${lat}&longitude=${long}`;
+        this.requestQuery = `?lat=${lat}&lng=${long}`;
         this.updateAroundList();
         return this.aroundList;
     }

@@ -1,5 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 
+import { CallComponent } from './call/call.component';
 import { NgModule } from '@angular/core';
 import { PanelComponent } from './panel/panel.component';
 // import { ReceiverComponent } from './receiver/receiver.component';
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: "panel",
     component: PanelComponent
+  },
+  {
+    path: "panel/call",
+    component: CallComponent
   },
   {
     path: "zixo/login",

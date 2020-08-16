@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AccessStateService } from './../accessState.service';
 import { PanelService } from './panel.service';
+import { PeerService } from './../peerjs/peer.service';
 import { UserService } from './../user/user.service';
 import { ZixoUserService } from './../zixo/user.service';
 
@@ -17,30 +18,29 @@ export class PanelComponent implements OnInit {
     peerId: string
   }[] = [];
 
-
   constructor(
     public zixoUserS: ZixoUserService,
     public userS: UserService,
     public PanelS: PanelService,
-    public accessStateS: AccessStateService
+    public accessStateS: AccessStateService,
+    public peerS: PeerService
   ) {
   }
 
   ngOnInit(): void {
-    this.updateList();
-    // let zixoToken = this.zixoUserS.authenticate();
-    // if (zixoToken) {
-    //   this.updateList();
-    // }
+    this.subscribeUserList();
   }
 
-  updateList() {
+  subscribeUserList() {
     this.PanelS
       .aroundList
       .subscribe((data: {
         id: string,
         peerId: string,
-        location: number[],
+        location: {
+          lat: number,
+          lng: number
+        },
         userName: string
       }[]) => {
         this.userList = [];
@@ -48,18 +48,16 @@ export class PanelComponent implements OnInit {
           data.forEach(element => {
             this.userList.push({
               username: element.userName,
-              geoLabel: element.location.join(" X "),
+              geoLabel: element.location.lat + " X " + element.location.lng,
               peerId: element.peerId
             });
           })
         }
       })
-
   }
 
   call(peerId) {
-    console.log('calling peerId ', peerId);
-
+    this.peerS.requestForCall(peerId);
   }
 
 }

@@ -1,9 +1,9 @@
-connecitonId: {{PeerS.$id | async}}
+<!-- connecitonId: {{PeerS.$id | async}} -->
 
-<video #localMedia style="width: 300px; height: 300px"></video>
+<video #remoteMedia style="width: 300px; height: 300px"></video>
 
 
-<form (submit)="formSubmitEvent($event)">
+<!-- <form (submit)="formSubmitEvent($event)">
     <input type="text" placeholder="Enter connection Id">
     <input type="submit" value="Connect">
 </form>
@@ -12,4 +12,4 @@ connecitonId: {{PeerS.$id | async}}
 <ng-container *ngFor="let ms of streamList">
     <video style="width: 300px; height: 300px" [srcObject]="ms" autoplay></video>
 
-</ng-container>
+</ng-container> -->

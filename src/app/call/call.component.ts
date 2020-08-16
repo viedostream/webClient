@@ -1,7 +1,7 @@
-import { PeerService } from './../peerjs/peer.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { AccessStateService } from './../accessState.service';
+import { PeerService } from './../peerjs/peer.service';
 
 @Component({
   selector: 'app-call',
@@ -10,61 +10,68 @@ import { AccessStateService } from './../accessState.service';
 })
 export class CallComponent implements OnInit {
 
-  @ViewChild('localMedia') localMedia: ElementRef;
-  @ViewChild('remoteVideoList') remoteVideoList: ElementRef;
-  stream: any;
-  streamList: MediaStream[];
+  @ViewChild('remoteMedia') remoteMedia: ElementRef;
+  // @ViewChild('remoteVideoList') remoteVideoList: ElementRef;
+  // stream: any;
+  // streamList: MediaStream[];
 
   constructor(
     public AccessStateS: AccessStateService,
-    public PeerS: PeerService
+    public PeerS: PeerService,
   ) {
 
   }
 
   ngOnInit(): void {
-    this.PeerS.$remoteMediaList.subscribe(streamList => {
-      this.streamList = [];
-      for(let key in streamList) {
-        this.streamList.push(streamList[key]);
-        console.log(streamList[key]); 
-        typeof(streamList[key])
-      }
-    })
+    // this.PeerS.$remoteMediaList.subscribe(streamList => {
+    //   this.streamList = [];
+    //   for(let key in streamList) {
+    //     this.streamList.push(streamList[key]);
+    //     console.log(streamList[key]); 
+    //     typeof(streamList[key])
+    //   }
+    // })
+
   }
 
   ngAfterViewInit() {
-    this.loadLocalMedia()
+    this.loadRemoteMedia();
+    // this.loadLocalMedia()
   }
 
   loadLocalMedia() {
-    this.AccessStateS.mediaStream.subscribe(stream => {
-      this.localMedia.nativeElement.srcObject = stream;
-      this.stream = stream;
-      this.localMedia.nativeElement.onloadedmetadata = () => {
-        console.log('going to play');
-
-        this.localMedia.nativeElement.play();
-        this.localMedia.nativeElement.volume = 0;
+    this.AccessStateS.getMedia().then(stream => {
+      this.remoteMedia.nativeElement.srcObject = stream;
+      this.remoteMedia.nativeElement.onloadedmetadata = () => {
+        this.remoteMedia.nativeElement.play();
+        this.remoteMedia.nativeElement.volume = 0;
       }
     });
   }
 
+  loadRemoteMedia() {
+    this.remoteMedia.nativeElement.srcObject = this.PeerS.remoteMediaStream;
+    this.remoteMedia.nativeElement.onloadedmetadata = () => {
+      this.remoteMedia.nativeElement.play();
+      this.remoteMedia.nativeElement.volume = 0;
+    }
+  }
+
   formSubmitEvent(event) {
-    let targetId = event.target[0].value;
-    console.log(this.stream);
-    
-    this.PeerS.connectRemote(targetId, this.stream).then(_ => {
-      // this.peer.call(targetId, this.stream).then(_ => {
-      //   // this.peer.c
-      // });
-    });
-    event.preventDefault();
+    // let targetId = event.target[0].value;
+    // console.log(this.stream);
+
+    // this.PeerS.connectRemote(targetId, this.stream).then(_ => {
+    //   // this.peer.call(targetId, this.stream).then(_ => {
+    //   //   // this.peer.c
+    //   // });
+    // });
+    // event.preventDefault();
   }
 
   foo() {
     console.log(111);
-    
+
   }
 
 }

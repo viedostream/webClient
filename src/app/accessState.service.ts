@@ -39,8 +39,6 @@ export class AccessStateService {
     getGeo(): Promise<any> {
         return new Promise((resolve, reject) => {
             let navigator = BROWSER.navigator;
-            console.log(navigator.geolocation);
-            
             if (!navigator.geolocation) {
                 console.log('Geolocation is not supported by your browser');
                 return reject(false);
