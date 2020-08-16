@@ -13,50 +13,47 @@ export class AccessStateService {
     media: BehaviorSubject<boolean> = new BehaviorSubject(false);
     geoLocation: BehaviorSubject<boolean> = new BehaviorSubject(false);
     mediaStream: Subject<any> = new Subject();
-    geoPosition: any;
 
     constructor(
-        // public PanelS: PanelService
     ) {
-        this.getGeoLocationAccess();
-        this.getMediaAccess();
+        // this.getGeo();
+        // this.getMedia();
     }
 
-    getMediaAccess(video: any = { width: 1280, height: 720 }, audio: boolean = true) {
-        let navigator = BROWSER.navigator;
-        navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
-            .then((stream) => {
-                this.media.next(true);
-                this.mediaStream.next(stream);
-            })
-            .catch(_ => { this.media.next(false) });
+    getMedia(video: any = { width: 1280, height: 720 }, audio: boolean = true) {
+        return new Promise((resolve, reject) => {
+            let navigator = BROWSER.navigator;
+            navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
+                .then((stream) => {
+                    this.media.next(true);
+                    this.mediaStream.next(stream);
+                    return resolve(stream)
+                })
+                .catch(_ => {
+                    this.media.next(false);
+                    return reject(false);
+                });
+        });
     }
 
-    getGeoLocationAccess() {
-        let navigator = BROWSER.navigator;
-        if (!navigator.geolocation) {
-            console.log('Geolocation is not supported by your browser');
-        } else {
-            navigator.geolocation.getCurrentPosition(position => {
-                this.geoLocation.next(true);
-                this.geoPosition = position;
-                // this.PanelS.updateData("0", this.geoPosition?.coords?.latitude, position?.coords?.longitude)
-                //     .then(response => {
-
-                //     })
-                //     .catch(_ => {
-                //         console.error('error');
-                //     })
-            }, error => {
-                console.error(error);
-                this.geoLocation.next(false);
-            });
-        }
+    getGeo(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let navigator = BROWSER.navigator;
+            console.log(navigator.geolocation);
+            
+            if (!navigator.geolocation) {
+                console.log('Geolocation is not supported by your browser');
+                return reject(false);
+            } else {
+                navigator.geolocation.getCurrentPosition(position => {
+                    this.geoLocation.next(true);
+                    return resolve(position);
+                }, error => {
+                    console.error(error);
+                    this.geoLocation.next(false);
+                    return reject(false);
+                });
+            }
+        });
     }
-
-    getMedia() {
-
-    }
-
-    getLocation() { }
 }

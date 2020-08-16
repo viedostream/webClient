@@ -16,7 +16,8 @@
     <ngb-alert *ngIf="zixoUserS.authenticate() == false"
         type="{{ (accessStateS.media | async) ? 'success' : 'warning' }}">
         webcam and audio access is {{ (accessStateS.media | async) ? 'on' : 'off' }}
-        <button *ngIf="!(accessStateS.media | async)" style="float: right;" class="btn btn-primary" (click)="accessStateS.getMediaAccess()">Access</button>
+        <button *ngIf="!(accessStateS.media | async)" style="float: right;" class="btn btn-primary"
+            (click)="accessStateS.getMediaAccess()">Access</button>
         <section style="clear: both;"></section>
     </ngb-alert>
 
@@ -42,7 +43,7 @@
                     {{ user.username }}
                 </td>
                 <td>{{ user.geoLabel }}</td>
-                <td><button class="btn btn-primary">Call</button></td>
+                <td><button class="btn btn-primary" (click)="call(user.peerId)">Call</button></td>
             </tr>
         </tbody>
     </table>

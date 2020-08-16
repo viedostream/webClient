@@ -1,29 +1,42 @@
-import { HashTable } from './../assets/hashTable';
 import * as PeerJS from './peerjs.js';
 
 import { BehaviorSubject, Subject } from 'rxjs';
 
+import { HashTable } from './../assets/hashTable';
+import { Injectable } from '@angular/core';
 import { environment } from './../../environments/environment';
 
-export class Peer {
+@Injectable({
+    providedIn: 'root'
+})
+export class PeerService {
     localConnection: any;
-    id: Subject<string> = new Subject();
+    $id: BehaviorSubject<string> = new BehaviorSubject("0");
     remotePeerList: HashTable<{ connection: any, call: any }> = {}
     remoteMediaList: HashTable<any> = {};
     $remoteMediaList: BehaviorSubject<any> = new BehaviorSubject([]);
 
     constructor() {
-        this.localConnection = new PeerJS(environment.PEERJS_CONFIG);
-        this.localConnection
-            .on('open', id => this.setLocalId(id))
-            .on('connection', remoteConnection => this.resolveRequestForConnection(remoteConnection))
-            .on('error', console.error)
-            .on('call', call => this.callHandler(call));
     }
 
-    setLocalId(id: string) {
-        this.id.next(id);
+    connect() {
+        return new Promise((resolve, reject) => {
+            this.localConnection = new PeerJS(environment.PEERJS_CONFIG);
+            this.localConnection
+                .on('connection', remoteConnection => this.resolveRequestForConnection(remoteConnection))
+                .on('error', console.error)
+                .on('call', call => this.callHandler(call))
+                .on('open', id => {
+                    return resolve(id);
+                });
+        })
     }
+
+    // setLocalId(id: string) {
+    //     console.log(id);
+
+    //     this.$id.next(id);
+    // }
 
     resolveRequestForConnection(remoteConnection) {
         remoteConnection
@@ -39,7 +52,7 @@ export class Peer {
                 // });
                 break;
             case "requestForCall":
-                console.log(data);
+                console.log("request call : ", data);
                 // this.remoteConnection = this.connection.connect(data.connectionId);
                 // this.remoteConnection.on('open', _ => {
                 //     this.remoteConnection.send('hi back :)');
@@ -47,49 +60,25 @@ export class Peer {
                 break;
             case "":
             default:
-                console.log('rjecting request of :', data);
+                console.log('rejecting request of :', data);
                 break;
         }
     }
 
     connectRemote(remoteAddress, stream) {
         return new Promise((resolve, reject) => {
-
-
-            this.localConnection.call(remoteAddress, stream)
-                .on('stream', console.log)
-                .on('error', console.error);
-
-            // let remoteConnection = this.localConnection.connect(remoteAddress);
-            // remoteConnection
-            //     .on('open', _ => {
-
-            //         remoteConnection.send('hi!');
-
-            //         console.log('sent hi');
-
-            //         resolve();
-
-            //     })
-
-
-
-
-            // this.remotePeerList[remoteAddress].connection = remoteConnection;
+            let remoteConnection = this.localConnection.connect(remoteAddress);
+            remoteConnection
+                .on('open', _ => {
+                    return resolve(remoteConnection);
+                })
         });
     }
 
     call(remoteAddress, stream) {
         return new Promise((resolve, reject) => {
-            // if (!(remoteAddress in this.remotePeerList)) {
-            //     return reject("remoteAddress not available")
-            // }
-            console.log(123123);
-
-            this.localConnection.call(remoteAddress, stream);
-            resolve();
-
-            // this.remotePeerList[remoteAddress].call = this.localConnection.call(remoteAddress,);
+            let mediaConnection = this.localConnection.call(remoteAddress, stream);
+            resolve(mediaConnection);
         });
     }
 
@@ -100,9 +89,4 @@ export class Peer {
             this.$remoteMediaList.next(this.remoteMediaList);
         });
     }
-
-    // addRemotePeer(remoteConnection) {
-    //     remoteConnection
-
-    // }
 }

@@ -1,7 +1,7 @@
+import { PeerService } from './../peerjs/peer.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 import { AccessStateService } from './../accessState.service';
-import { Peer } from './../peerjs/peer.class';
 
 @Component({
   selector: 'app-call',
@@ -12,18 +12,18 @@ export class CallComponent implements OnInit {
 
   @ViewChild('localMedia') localMedia: ElementRef;
   @ViewChild('remoteVideoList') remoteVideoList: ElementRef;
-  peer: Peer = new Peer();
   stream: any;
   streamList: MediaStream[];
 
   constructor(
     public AccessStateS: AccessStateService,
+    public PeerS: PeerService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.peer.$remoteMediaList.subscribe(streamList => {
+    this.PeerS.$remoteMediaList.subscribe(streamList => {
       this.streamList = [];
       for(let key in streamList) {
         this.streamList.push(streamList[key]);
@@ -54,7 +54,7 @@ export class CallComponent implements OnInit {
     let targetId = event.target[0].value;
     console.log(this.stream);
     
-    this.peer.connectRemote(targetId, this.stream).then(_ => {
+    this.PeerS.connectRemote(targetId, this.stream).then(_ => {
       // this.peer.call(targetId, this.stream).then(_ => {
       //   // this.peer.c
       // });

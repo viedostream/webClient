@@ -1,4 +1,4 @@
-connecitonId: {{peer.id | async}}
+connecitonId: {{PeerS.$id | async}}
 
 <video #localMedia style="width: 300px; height: 300px"></video>
 
@@ -10,13 +10,6 @@ connecitonId: {{peer.id | async}}
 
 
 <ng-container *ngFor="let ms of streamList">
-    <video 
-        
-        style="width: 300px; height: 300px" 
-        [srcObject]="ms"
-        autoplay 
-        >
-
-    </video>
+    <video style="width: 300px; height: 300px" [srcObject]="ms" autoplay></video>
 
 </ng-container>
