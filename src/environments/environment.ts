@@ -12,6 +12,12 @@ export const environment = {
     port: 443,
     path: '/peerjs',
     // debug: 3
+  },
+  STREAM_CONFIG: {
+    INVOICE_PRICE: 5000,
+    DURATION_SECONDS: 5,
+    CHANNEL_PRICE: 50000,
+    CHANNEL_LOCK_SECONDS: 600
   }
 };
 

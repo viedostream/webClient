@@ -14,9 +14,18 @@ import { ZixoService } from './../zixo/zixo.service';
 export class PanelComponent implements OnInit {
   userList: {
     username: string,
+    title: string,
     geoLabel: string,
-    peerId: string
+    peerId: string,
+    position: {
+      lat: number,
+      lng: number
+    }
   }[] = [];
+
+  title = 'My first AGM project';
+  lat = 51.678418;
+  lng = 7.809007;
 
   constructor(
     public zixoS: ZixoService,
@@ -29,7 +38,15 @@ export class PanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeUserList();
+
   }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+
+  }
+
 
   subscribeUserList() {
     this.PanelS
@@ -48,8 +65,13 @@ export class PanelComponent implements OnInit {
           data.forEach(element => {
             this.userList.push({
               username: element.userName,
+              title: element.userName,
               geoLabel: element.location.lat + " X " + element.location.lng,
-              peerId: element.peerId
+              peerId: element.peerId,
+              position: {
+                lat: element.location.lat,
+                lng: element.location.lng,
+              }
             });
           })
         }
@@ -58,6 +80,10 @@ export class PanelComponent implements OnInit {
 
   call(peerId) {
     this.peerS.requestForCall(peerId);
+  }
+
+  logggg(data) {
+    console.log(data);
   }
 
 }

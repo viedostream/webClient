@@ -39,10 +39,16 @@ export class PeerService {
         return new Promise((resolve, reject) => {
             this.localConnection = new PeerJS(environment.PEERJS_CONFIG);
             this.localConnection
-                .on('connection', remoteConnection => this.resolveRequestForConnection(remoteConnection))
+                .on('connection', remoteConnection => {
+                    console.log('someone is trying to connect', remoteConnection);
+
+                    this.resolveRequestForConnection(remoteConnection)
+                })
                 .on('error', console.error)
                 .on('call', call => this.callHandler(call))
                 .on('open', id => {
+                    console.log(id);
+
                     return resolve(id);
                 });
         })
@@ -55,8 +61,17 @@ export class PeerService {
     // }
 
     resolveRequestForConnection(remoteConnection) {
+        console.log('trying to make connection happen');
+
         remoteConnection
-            .on('data', data => this.actionHandler(data, remoteConnection));
+            .on('data', data => {
+                console.log(data);
+
+                this.actionHandler(data, remoteConnection)
+            })
+            .on('open', console.log)
+            .on('error', console.error)
+            .on('close', console.error);
     }
 
     actionHandler(data, remoteConnection) {
@@ -80,7 +95,14 @@ export class PeerService {
                                         clearInterval(interval)
                                     }
                                 });
-                        }, 5000);
+                        }, environment.STREAM_CONFIG.DURATION_SECONDS * 1.5 * 1000);
+
+                        // mediaConnection.peerConnection.onconnectionstatechange = _ => {
+                        //     if (call.peerConnection.connectionState == "disconnected") {
+                        //         this.Router.navigate(['panel']);
+                        //         this.stopPayment(call.peer);
+                        //     }
+                        // };
 
                     });
                 })
@@ -125,6 +147,9 @@ export class PeerService {
                 .on('open', _ => {
                     return resolve(remoteConnection);
                 })
+                .on('open', console.log)
+                .on('error', console.error)
+                .on('close', console.error);
         });
     }
 
@@ -168,7 +193,7 @@ export class PeerService {
         channelObject.paymentInterval = setInterval(() => {
             this.zixoS.channel_invoice_create(
                 channelObject.channelId,
-                5000,
+                environment.STREAM_CONFIG.INVOICE_PRICE,
                 'I am streaming from VIEDO :D ;)'
             ).then(res => {
                 channelObject.connection.send({
@@ -179,7 +204,7 @@ export class PeerService {
                     }
                 })
             })
-        }, 1000);
+        }, environment.STREAM_CONFIG.DURATION_SECONDS * 1000);
     }
 
     stopPayment(peerId) {
@@ -188,7 +213,10 @@ export class PeerService {
     }
 
     requestForCall(remotePeerId) {
-        this.zixoS.channel_create(50000, 600).then(channelData => {
+        this.zixoS.channel_create(
+            environment.STREAM_CONFIG.CHANNEL_PRICE,
+            environment.STREAM_CONFIG.CHANNEL_LOCK_SECONDS
+        ).then(channelData => {
             this.connectRemote(remotePeerId).then((connection: any) => {
                 this.channelList[remotePeerId] = {
                     channelId: channelData.channelId,

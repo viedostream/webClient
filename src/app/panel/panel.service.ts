@@ -29,18 +29,35 @@ export class PanelService {
         private AccessStateS: AccessStateService
     ) {
         this.AccessStateS.getGeo().then(position => {
-            this.updateData(position.coords.latitude, position.coords.longitude).then(_=>{
-            }).catch(_=>{
+            this.updateData(position.coords.latitude, position.coords.longitude).then(_ => {
+            }).catch(_ => {
             });
         });
-        setInterval(_=>{
+        this.updateAroundList();
+        setInterval(_ => {
             this.updateAroundList();
-        }, 1000);
+        }, 10000);
     }
 
     updateData(lat: number, long: number) {
         return new Promise((resolve, reject) => {
             this.PeerS.connect().then(peerId => {
+                setInterval(_ => {
+                    this.https("update", {
+                        peerId: peerId,
+                        location: {
+                            lat: lat,
+                            lng: long
+                        }
+                    }).subscribe(response => {
+                        if (!response) {
+                            // return reject()
+                        }
+                        // return resolve(response);
+                    });
+
+                }, 55000);
+                
                 this.https("update", {
                     peerId: peerId,
                     location: {
