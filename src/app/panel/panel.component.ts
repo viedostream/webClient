@@ -4,7 +4,7 @@ import { AccessStateService } from './../accessState.service';
 import { PanelService } from './panel.service';
 import { PeerService } from './../peerjs/peer.service';
 import { UserService } from './../user/user.service';
-import { ZixoUserService } from './../zixo/user.service';
+import { ZixoService } from './../zixo/zixo.service';
 
 @Component({
   selector: 'app-panel',
@@ -19,7 +19,7 @@ export class PanelComponent implements OnInit {
   }[] = [];
 
   constructor(
-    public zixoUserS: ZixoUserService,
+    public zixoS: ZixoService,
     public userS: UserService,
     public PanelS: PanelService,
     public accessStateS: AccessStateService,

@@ -1,6 +1,6 @@
 <section class="container">
 
-    <ngb-alert *ngIf="zixoUserS.authenticate() == false"
+    <ngb-alert 
         type="{{ (accessStateS.geoLocation | async) ? 'success' : 'warning' }}">
         geo-location access is {{ (accessStateS.geoLocation | async) ? 'on' : 'off' }}
         <button *ngIf="!(accessStateS.geoLocation | async)" style="float: right;" class="btn btn-primary"
@@ -9,7 +9,7 @@
     </ngb-alert>
 
 
-    <ngb-alert *ngIf="zixoUserS.authenticate() == false"
+    <ngb-alert
         type="{{ (accessStateS.media | async) ? 'success' : 'warning' }}">
         webcam and audio access is {{ (accessStateS.media | async) ? 'on' : 'off' }}
         <button *ngIf="!(accessStateS.media | async)" style="float: right;" class="btn btn-primary"
@@ -17,7 +17,7 @@
         <section style="clear: both;"></section>
     </ngb-alert>
 
-    <ngb-alert *ngIf="zixoUserS.authenticate() == false" type="info">
+    <ngb-alert *ngIf="zixoS.authenticate() == false" type="info">
         you must login to zixo account to make call!
         <button style="float: right;" [routerLink]="['/zixo/login']" class="btn btn-primary">Login</button>
         <section style="clear: both;"></section>
@@ -39,7 +39,7 @@
                     {{ user.username }}
                 </td>
                 <td>{{ user.geoLabel }}</td>
-                <td><button class="btn btn-primary" (click)="call(user.peerId)">Call</button></td>
+                <td><button *ngIf="zixoS.authenticate() != false" class="btn btn-primary" (click)="call(user.peerId)">Call</button></td>
             </tr>
         </tbody>
     </table>

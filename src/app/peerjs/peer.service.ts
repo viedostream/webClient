@@ -1,11 +1,12 @@
 import * as PeerJS from './peerjs.js';
 
 import { BehaviorSubject, Subject } from 'rxjs';
+import { Component, Injectable } from '@angular/core';
 
 import { AccessStateService } from './../accessState.service';
 import { HashTable } from './../assets/hashTable';
-import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { ZixoService } from './../zixo/zixo.service';
 import { environment } from './../../environments/environment';
 
 @Injectable({
@@ -18,10 +19,19 @@ export class PeerService {
     remoteMediaStream: MediaStream;
     // remoteMediaList: HashTable<any> = {};
     // $remoteMediaList: BehaviorSubject<any> = new BehaviorSubject([]);
+    private channelList: HashTable<{
+        channelId: string,
+        paymentIntervalActive: boolean,
+        paymentInterval: any,
+        connection: any
+    }> = {};
+    private invoiceList: HashTable<string[]> = {};
+    private confirmedInvoiceList: HashTable<string[]> = {};
 
     constructor(
         private AccessStateS: AccessStateService,
-        private Router: Router
+        private Router: Router,
+        private zixoS: ZixoService
     ) {
     }
 
@@ -58,16 +68,54 @@ export class PeerService {
                 // });
                 break;
             case "requestForCall":
-                this.AccessStateS.getMedia().then(stream => {
-                    this.localConnection.call(remoteConnection.peer, stream);
-                });
-                console.log("request call : ", data, remoteConnection.peer, remoteConnection);
+                console.log(data.value);
+                this.zixoS.channel_join(data.value.channelId).then(result => {
+                    console.log(result);
+                    this.AccessStateS.getMedia().then(stream => {
+                        let mediaConnection = this.localConnection.call(remoteConnection.peer, stream);
+                        let interval = setInterval(() => {
+                            this.confirmPaymentOrClose(data.value.channelId, mediaConnection)
+                                .then(state => {
+                                    if (state) {
+                                        clearInterval(interval)
+                                    }
+                                });
+                        }, 5000);
+
+                    });
+                })
+                break;
+            case "invoice":
+                this.addInvoice(data.value.channelId, data.value.paymentId);
                 break;
             case "":
             default:
                 console.log('rejecting request of :', data);
                 break;
         }
+    }
+
+    confirmPaymentOrClose(channelId, mediaConnection) {
+        return new Promise(resolve => {
+            let paymentId = this.invoiceList[channelId].pop();
+            if (paymentId) {
+                this.zixoS.channel_getPayment(channelId, paymentId).then(response => {
+                    return resolve(false);
+                })
+            } else {
+                mediaConnection.close();
+                this.zixoS.Channel_close(channelId).then(_ => {
+                });
+                return resolve(true);
+            }
+        })
+    }
+
+    addInvoice(channelId, paymentId) {
+        if (!this.invoiceList[channelId]) {
+            this.invoiceList[channelId] = []
+        }
+        this.invoiceList[channelId].push(paymentId);
     }
 
     connectRemote(remoteAddress) {
@@ -90,20 +138,71 @@ export class PeerService {
     callHandler(call) {
         console.log('call coming through');
         call.answer();
+        call.on('close', _ => {
+            this.Router.navigate(['panel'])
+        });
+        call.on('error', _ => {
+            this.Router.navigate(['panel'])
+        });
         call.on('stream', stream => {
             this.remoteMediaStream = stream;
-            this.Router.navigate(['panel/call'])
+            this.Router.navigate(['panel/call']);
+            this.makePayment(call.peer);
             // this.remoteMediaList[stream.id] = stream;
             // this.$remoteMediaList.next(this.remoteMediaList);
         });
+        call.peerConnection.onconnectionstatechange = _ => {
+            if (call.peerConnection.connectionState == "disconnected") {
+                this.Router.navigate(['panel']);
+                this.stopPayment(call.peer);
+            }
+        };
+    }
+
+    makePayment(peerId) {
+        let channelObject = this.channelList[peerId];
+        if (channelObject.paymentIntervalActive) {
+            return true;
+        }
+        channelObject.paymentIntervalActive = true;
+        channelObject.paymentInterval = setInterval(() => {
+            this.zixoS.channel_invoice_create(
+                channelObject.channelId,
+                5000,
+                'I am streaming from VIEDO :D ;)'
+            ).then(res => {
+                channelObject.connection.send({
+                    type: 'invoice',
+                    value: {
+                        paymentId: res.paymentId,
+                        channelId: res.channelId
+                    }
+                })
+            })
+        }, 1000);
+    }
+
+    stopPayment(peerId) {
+        clearInterval(this.channelList[peerId].paymentInterval);
+        // close channel :)))
     }
 
     requestForCall(remotePeerId) {
-        this.connectRemote(remotePeerId).then((connection: any) => {
-            connection.send({
-                type: 'requestForCall',
-                value: {}
-            })
+        this.zixoS.channel_create(50000, 600).then(channelData => {
+            this.connectRemote(remotePeerId).then((connection: any) => {
+                this.channelList[remotePeerId] = {
+                    channelId: channelData.channelId,
+                    paymentIntervalActive: false,
+                    paymentInterval: null,
+                    connection: connection
+                };
+                connection.send({
+                    type: 'requestForCall',
+                    value: {
+                        channelId: channelData.channelId
+                    }
+                })
+            });
         });
     }
 }

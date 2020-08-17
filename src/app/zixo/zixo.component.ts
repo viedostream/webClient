@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { ZixoUserService } from './user.service';
+import { ZixoService } from './zixo.service';
 
 @Component({
   selector: 'app-zixo',
@@ -14,7 +14,7 @@ export class ZixoComponent implements OnInit {
   dangerMessage: string = ''
 
   constructor(
-    private UserS: ZixoUserService,
+    private UserS: ZixoService,
     private router: Router
   ) { }
 
