@@ -53,7 +53,7 @@ export class CallComponent implements OnInit {
     this.remoteMedia.nativeElement.srcObject = this.PeerS.remoteMediaStream;
     this.remoteMedia.nativeElement.onloadedmetadata = () => {
       this.remoteMedia.nativeElement.play();
-      this.remoteMedia.nativeElement.volume = 0;
+      // this.remoteMedia.nativeElement.volume = 0;
     }
   }
 
