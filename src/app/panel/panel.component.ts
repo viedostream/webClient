@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccessStateService } from './../accessState.service';
 import { PanelService } from './panel.service';
 import { PeerService } from './../peerjs/peer.service';
+import { Router } from '@angular/router';
 import { UserService } from './../user/user.service';
 import { ZixoService } from './../zixo/zixo.service';
 
@@ -32,13 +33,16 @@ export class PanelComponent implements OnInit {
     public userS: UserService,
     public PanelS: PanelService,
     public accessStateS: AccessStateService,
-    public peerS: PeerService
+    public peerS: PeerService,
+    private router:Router
   ) {
   }
 
   ngOnInit(): void {
     this.subscribeUserList();
-
+    if(!this.userS.authenticate()) {
+      this.router.navigate(['user'])
+    }
   }
 
   ngAfterViewInit(): void {

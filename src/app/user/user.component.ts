@@ -46,8 +46,13 @@ export class UserComponent implements OnInit {
 
   login() {
     if (this.UserS.authenticate()) {
-      this.router.navigate(['panel'])
+      return this.router.navigate(['panel'])
     }
+    setTimeout(() => {
+      if (this.UserS.authenticate()) {
+        return this.router.navigate(['panel'])
+      }
+    }, 1000);
   }
 
   loginFail() {

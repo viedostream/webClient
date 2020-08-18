@@ -1,24 +1,25 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-import { ENVIRONMENT_TYPE } from "./environment.type"
 
-export const environment: ENVIRONMENT_TYPE = {
-  production: false,
-  API_ENDPOINT: "https://api.viedo.io/",
-  ZIXO_ENDPOINT: "https://api.zixo.io/test/",
+
+export type ENVIRONMENT_TYPE = {
+  production: boolean,
+  API_ENDPOINT: string,
+  ZIXO_ENDPOINT: string,
   PEERJS_CONFIG: {
-    host: "peer.koalament.io",
-    secure: true,
-    port: 443,
-    path: '/peerjs',
-    // debug: 3
+    host: string,
+    secure: boolean,
+    port: number,
+    path: string,
+    debug?: number,
+    config?: any
   },
   STREAM_CONFIG: {
-    INVOICE_PRICE: 5000,
-    DURATION_SECONDS: 5,
-    CHANNEL_PRICE: 50000,
-    CHANNEL_LOCK_SECONDS: 600
+    INVOICE_PRICE: number,
+    DURATION_SECONDS: number,
+    CHANNEL_PRICE: number,
+    CHANNEL_LOCK_SECONDS: number
   }
 };
 

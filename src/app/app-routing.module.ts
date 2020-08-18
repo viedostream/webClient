@@ -9,10 +9,11 @@ import { UserComponent } from './user/user.component';
 import { ZixoComponent } from './zixo/zixo.component';
 
 const routes: Routes = [
-  // {
-  //   path: "",
-  //   component: 
-  // },
+  {
+    path: "",
+    pathMatch: "full",
+    redirectTo: "user"
+  },
   // {
   //   path: "connect",
   //   component: SenderComponent

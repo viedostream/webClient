@@ -1,6 +1,17 @@
 <section class="container">
 
-  <ngb-alert type="{{ (accessStateS.geoLocation | async) ? 'success' : 'warning' }}">
+  <nav *ngIf="userS.authenticate()" class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <!-- <img src="/docs/4.4/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt=""> -->
+      VIEDO
+    </a>
+    <form class="form-inline">
+      <button class="btn btn-outline-danger my-2 my-sm-0" (click)="userS.logout()" >LOGOUT</button>
+    </form>
+  </nav>
+
+
+  <ngb-alert *ngIf="!(accessStateS.geoLocation | async)" type="{{ (accessStateS.geoLocation | async) ? 'success' : 'warning' }}">
     geo-location access is {{ (accessStateS.geoLocation | async) ? 'on' : 'off' }}
     <button *ngIf="!(accessStateS.geoLocation | async)" style="float: right;" class="btn btn-primary"
       (click)="accessStateS.getGeo()">Access</button>
@@ -8,7 +19,7 @@
   </ngb-alert>
 
 
-  <ngb-alert type="{{ (accessStateS.media | async) ? 'success' : 'warning' }}">
+  <ngb-alert *ngIf="!(accessStateS.media | async)" type="{{ (accessStateS.media | async) ? 'success' : 'warning' }}">
     webcam and audio access is {{ (accessStateS.media | async) ? 'on' : 'off' }}
     <button *ngIf="!(accessStateS.media | async)" style="float: right;" class="btn btn-primary"
       (click)="accessStateS.getMedia()">Access</button>
@@ -21,11 +32,17 @@
     <section style="clear: both;"></section>
   </ngb-alert>
 
+  <ngb-alert *ngIf="zixoS.authenticate() != false" type="success">
+    You are login to zixo wallet.
+    <button style="float: right;" class="btn btn-primary" (click)="zixoS.logout()">logout</button>
+    <section style="clear: both;"></section>
+  </ngb-alert>
+
   <google-map>
-    <map-marker #markerElem *ngFor="let user of userList; index as i" [position]="user.position"
-      [label]="user.username" [title]="user.title" (mapClick)="call(user.peerId);">
+    <map-marker #markerElem *ngFor="let user of userList; index as i" [position]="user.position" [label]="user.username"
+      [title]="user.title" (mapClick)="call(user.peerId);">
     </map-marker>
-  </google-map> 
+  </google-map>
 
   <table class="table table-striped">
     <thead>

@@ -39,6 +39,11 @@ export class ZixoService {
         });
     }
 
+    logout() {
+        this.token = null;
+        localStorage.removeItem("zixoToken");
+    }
+
     register(email: string, username: string, password: string) {
         return new Promise(resolve => {
             this.https('create', {
