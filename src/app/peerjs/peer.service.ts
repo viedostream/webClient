@@ -95,7 +95,7 @@ export class PeerService {
                                         clearInterval(interval)
                                     }
                                 });
-                        }, environment.STREAM_CONFIG.DURATION_SECONDS * 1.5 * 1000);
+                        }, environment.STREAM_CONFIG.PAYMENT_PERIOD_DURATION_SECONDS * 1.5 * 1000);
 
                         // mediaConnection.peerConnection.onconnectionstatechange = _ => {
                         //     if (call.peerConnection.connectionState == "disconnected") {
@@ -193,7 +193,7 @@ export class PeerService {
         channelObject.paymentInterval = setInterval(() => {
             this.zixoS.channel_invoice_create(
                 channelObject.channelId,
-                environment.STREAM_CONFIG.INVOICE_PRICE,
+                environment.STREAM_CONFIG.INVOICE_AMOUNT,
                 'I am streaming from VIEDO :D ;)'
             ).then(res => {
                 channelObject.connection.send({
@@ -204,7 +204,7 @@ export class PeerService {
                     }
                 })
             })
-        }, environment.STREAM_CONFIG.DURATION_SECONDS * 1000);
+        }, environment.STREAM_CONFIG.PAYMENT_PERIOD_DURATION_SECONDS * 1000);
     }
 
     stopPayment(peerId) {
@@ -214,7 +214,7 @@ export class PeerService {
 
     requestForCall(remotePeerId) {
         this.zixoS.channel_create(
-            environment.STREAM_CONFIG.CHANNEL_PRICE,
+            environment.STREAM_CONFIG.CHANNEL_CREDIT,
             environment.STREAM_CONFIG.CHANNEL_LOCK_SECONDS
         ).then(channelData => {
             this.connectRemote(remotePeerId).then((connection: any) => {

@@ -16,9 +16,9 @@ export type ENVIRONMENT_TYPE = {
     config?: any
   },
   STREAM_CONFIG: {
-    INVOICE_PRICE: number,
-    DURATION_SECONDS: number,
-    CHANNEL_PRICE: number,
+    INVOICE_AMOUNT: number,
+    PAYMENT_PERIOD_DURATION_SECONDS: number,
+    CHANNEL_CREDIT: number,
     CHANNEL_LOCK_SECONDS: number
   }
 };
