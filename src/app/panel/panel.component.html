@@ -38,7 +38,7 @@
     <section style="clear: both;"></section>
   </ngb-alert>
 
-  <google-map>
+  <google-map *ngIf="userList.length > 0">
     <map-marker #markerElem *ngFor="let user of userList; index as i" [position]="user.position" [label]="user.username"
       [title]="user.title" (mapClick)="call(user.peerId);">
     </map-marker>
