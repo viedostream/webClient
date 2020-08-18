@@ -1,27 +1,31 @@
-# VideoCall
+# How to config
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.0.
+1. go to `src/environments`
+1. copy `environment.sample.ts` file under the name `environment.ts`
+1. open the file (we recommend vs-code for intel) and fill the empty parts
 
-## Development server
+   ```typescript
+   import { ENVIRONMENT_TYPE } from "./environment.type";
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+   export const environment: ENVIRONMENT_TYPE = {
+     production: false,
+     API_ENDPOINT: "",
+     ZIXO_ENDPOINT: "",
+     PEERJS_CONFIG: {
+       host: "",
+       secure: true,
+       port: 443,
+       path: "",
+       // debug: 3
+     },
+     STREAM_CONFIG: {
+       INVOICE_PRICE: 5000,
+       DURATION_SECONDS: 5,
+       CHANNEL_PRICE: 50000,
+       CHANNEL_LOCK_SECONDS: 600,
+     },
+   };
+   ```
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+1. save the file
+1. copy file and paste under the name of `environment.prod.ts`
