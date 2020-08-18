@@ -32,3 +32,7 @@
 1. edit `environment.prod.ts` (we recommend vs-code)
 1. change `production: false` to `production: true`
 1. save and exit
+
+# ZIXO
+
+You can register and login with zixo wallet from this web client, you need to send some satooshi(test-net) to your wallet to use viedo.
