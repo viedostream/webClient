@@ -31,7 +31,15 @@
   </ngb-alert>
 
   <ngb-alert *ngIf="zixoS.authenticate() != false" type="success">
-    You are login to zixo wallet.
+    <p>
+      You are login to zixo wallet.
+    </p>
+    <p>
+      address: {{zixoS.address | async}}
+    </p>
+    <p>
+      Balance: {{zixoS.balance | async}}
+    </p>
     <button style="float: right;" class="btn btn-primary" (click)="zixoS.logout()">logout</button>
     <section style="clear: both;"></section>
   </ngb-alert>

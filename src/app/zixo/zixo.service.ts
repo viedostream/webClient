@@ -13,11 +13,18 @@ import { environment } from './../../environments/environment';
 export class ZixoService {
     private url: string = environment.ZIXO_ENDPOINT;
     private token: string;
-
+    public address: BehaviorSubject<string> = new BehaviorSubject('');
+    public balance: BehaviorSubject<string> = new BehaviorSubject('');
+    
     constructor(
         private HttpClient: HttpClient
     ) {
         this.token = localStorage.getItem("zixoToken");
+        if (this.token) {
+            this.getAddress();
+            this.getBalance();
+            setInterval(_=> this.getBalance(), 5000);
+        }
     }
 
     login(emailOrUsername: string, password: string) {
@@ -48,13 +55,35 @@ export class ZixoService {
         return new Promise(resolve => {
             this.https('create', {
                 email: email,
-                user: username,
+                username: username,
                 password: password
             }).subscribe((data: any) => {
                 this.storeToken(data.token);
-                resolve();
+                resolve(data);
             });
         });
+    }
+
+    getAddress() {
+        return new Promise(resolve => {
+            this.httpsGet('address/receive').subscribe((result: { address: string }) => {
+                this.address.next(result.address);
+                resolve(result.address)
+            })
+        })
+    }
+
+    getBalance() {
+        return new Promise(resolve => {
+            this.httpsGet('balance').subscribe((result: { summery: {
+                confirmed: number,
+                unconfirmed: number
+            } }) => {
+                let stringify = result.summery.confirmed+ " Confirmed + " 
+                + result.summery.unconfirmed + " Unconfirmed."
+                this.balance.next(stringify);
+            })
+        })
     }
 
     authenticate() {

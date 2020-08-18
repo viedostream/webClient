@@ -12,13 +12,36 @@ export class ZixoComponent implements OnInit {
 
   tab: string = "login";
   dangerMessage: string = ''
+  mnemonic: string;
+  address: string;
 
   constructor(
-    private UserS: ZixoService,
+    public UserS: ZixoService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    if(this.UserS.authenticate()) {
+      this.router.navigate(['panel'])
+    }
+  }
+
+  registerSubmit(event) {
+    let data = {
+      email: event.target[0].value,
+      username: event.target[1].value,
+      password: event.target[2].value
+    }
+    this.UserS.register(data.email, data.username, data.password).then((result: any) => {
+      console.log(result);
+      if (result?.mnemonic) {
+        this.mnemonic = result.mnemonic;
+      }
+      this.UserS.getAddress().then((address: string) => {
+        this.address = address;
+      })
+    });
+    event.preventDefault();
   }
 
   loginSubmit(event) {
