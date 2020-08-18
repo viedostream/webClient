@@ -3,7 +3,7 @@ import { ENVIRONMENT_TYPE } from "./environment.type"
 export const environment: ENVIRONMENT_TYPE = {
   production: false,
   API_ENDPOINT: "",
-  ZIXO_ENDPOINT: "",
+  ZIXO_ENDPOINT: "https://api.zixo.io/test/",
   PEERJS_CONFIG: {
     host: "",
     secure: true,
