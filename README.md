@@ -29,3 +29,6 @@
 
 1. save the file
 1. copy file and paste under the name of `environment.prod.ts`
+1. edit `environment.prod.ts` (we recommend vs-code)
+1. change `production: false` to `production: true`
+1. save and exit
