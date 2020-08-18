@@ -1,17 +1,15 @@
 <section class="container">
 
   <nav *ngIf="userS.authenticate()" class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-      <!-- <img src="/docs/4.4/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt=""> -->
-      VIEDO
-    </a>
+    <img src="/assets/logo2.svg" width="94px" class="d-inline-block align-top" alt="">
     <form class="form-inline">
-      <button class="btn btn-outline-danger my-2 my-sm-0" (click)="userS.logout()" >LOGOUT</button>
+      <button class="btn btn-outline-danger my-2 my-sm-0" (click)="userS.logout()">LOGOUT</button>
     </form>
   </nav>
 
 
-  <ngb-alert *ngIf="!(accessStateS.geoLocation | async)" type="{{ (accessStateS.geoLocation | async) ? 'success' : 'warning' }}">
+  <ngb-alert *ngIf="!(accessStateS.geoLocation | async)"
+    type="{{ (accessStateS.geoLocation | async) ? 'success' : 'warning' }}">
     geo-location access is {{ (accessStateS.geoLocation | async) ? 'on' : 'off' }}
     <button *ngIf="!(accessStateS.geoLocation | async)" style="float: right;" class="btn btn-primary"
       (click)="accessStateS.getGeo()">Access</button>
